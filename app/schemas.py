@@ -48,14 +48,6 @@ class ScenarioResponse(BaseModel):
         from_attributes = True
 
 
-class ScenarioStartRequest(BaseModel):
-    scenario_uuid: UUID
-
-
-class ScenarioStartResponse(BaseModel):
-    id: str
-
-
 class ScenarioFinishRequest(BaseModel):
     result_id: UUID
     passenger_loyality: int = Field(..., ge=0)

@@ -61,26 +61,6 @@ def get_scenario_detail(db: Session, scenario_uuid: str, user_uuid: str) -> Dict
     }
 
 
-def start_scenario(db: Session, user_uuid: str, scenario_uuid: str) -> ScenarioResult:
-    scenario = db.query(Scenario).filter(Scenario.scenario_uuid == scenario_uuid).first()
-    if not scenario:
-        raise HTTPException(status_code=404, detail="Scenario not found")
-
-    result = ScenarioResult(
-        user_uuid=user_uuid,
-        scenario_uuid=scenario_uuid,
-        passenger_loyality=None,
-        security_rating=None,
-        time_end=None,
-        duration_playtime=None,
-        result_json=None,
-    )
-    db.add(result)
-    db.commit()
-    db.refresh(result)
-    return result
-
-
 def finish_scenario(db: Session, user_uuid: str, data: ScenarioFinishRequest) -> ScenarioResult:
     result = db.query(ScenarioResult).filter(ScenarioResult.id == data.result_id).first()
     if not result:

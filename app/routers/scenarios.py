@@ -5,8 +5,6 @@ from app.database import get_db
 from app.models import User
 from app.schemas import (
     ScenarioResponse,
-    ScenarioStartRequest,
-    ScenarioStartResponse,
     ScenarioFinishRequest,
     ScenarioFinishResponse,
     LeaderboardRequest,
@@ -35,18 +33,6 @@ def get_scenarios(
 ):
     scenarios = scenario_service.get_all_scenarios(db)
     return [s.to_dict() for s in scenarios]
-
-
-@router.post("/start", response_model=ScenarioStartResponse, status_code=201)
-def start_scenario(
-    data: ScenarioStartRequest,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    result = scenario_service.start_scenario(
-        db, str(current_user.user_uuid), str(data.scenario_uuid)
-    )
-    return {"id": str(result.id)}
 
 
 @router.post("/finish", response_model=ScenarioFinishResponse)
