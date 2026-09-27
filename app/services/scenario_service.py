@@ -149,6 +149,23 @@ def get_results_by_scenario(db: Session, scenario_uuid: str) -> List[ScenarioRes
     )
 
 
+def get_result_by_id(db: Session, result_id: str) -> ScenarioResult:
+    result_pk = _to_uuid(result_id)
+    if result_pk is None:
+        raise HTTPException(status_code=404, detail="Result not found")
+
+    result = (
+        db.query(ScenarioResult)
+        .options(joinedload(ScenarioResult.scenario))
+        .filter(ScenarioResult.id == result_pk)
+        .first()
+    )
+    if not result:
+        raise HTTPException(status_code=404, detail="Result not found")
+
+    return result
+
+
 def _to_uuid(value: str):
     try:
         return uuid.UUID(value)
