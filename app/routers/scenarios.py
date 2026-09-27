@@ -78,6 +78,16 @@ def get_my_results(
     return [_result_to_dict(r) for r in results]
 
 
+@router.get("/results/scenario/{scenario_uuid}", response_model=List[ScenarioResultOut])
+def get_results_by_scenario(
+    scenario_uuid: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    results = scenario_service.get_results_by_scenario(db, scenario_uuid)
+    return [_result_to_dict(r) for r in results]
+
+
 @router.get("/results/{user_uuid}", response_model=List[ScenarioResultOut])
 def get_user_results_by_uuid(
     user_uuid: str,

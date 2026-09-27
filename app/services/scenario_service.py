@@ -157,6 +157,18 @@ def get_user_results(db: Session, user_uuid: str) -> List[ScenarioResult]:
     )
 
 
+def get_results_by_scenario(db: Session, scenario_uuid: str) -> List[ScenarioResult]:
+    scenario = get_scenario(db, scenario_uuid)
+
+    return (
+        db.query(ScenarioResult)
+        .options(joinedload(ScenarioResult.scenario))
+        .filter(ScenarioResult.scenario_uuid == scenario.scenario_uuid)
+        .order_by(ScenarioResult.time_end.desc().nulls_last())
+        .all()
+    )
+
+
 def _to_uuid(value: str):
     try:
         return uuid.UUID(value)
